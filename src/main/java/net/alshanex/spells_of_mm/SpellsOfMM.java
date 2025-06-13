@@ -1,6 +1,7 @@
 package net.alshanex.spells_of_mm;
 
 import net.alshanex.spells_of_mm.registry.SMMAttributeRegistry;
+import net.alshanex.spells_of_mm.registry.SMMItemRegistry;
 import net.alshanex.spells_of_mm.registry.SMMSchoolRegistry;
 import org.slf4j.Logger;
 
@@ -61,6 +62,8 @@ public class SpellsOfMM
 
         SMMSchoolRegistry.SCHOOLS.register(modEventBus);
 
+        SMMItemRegistry.ITEMS.register(modEventBus);
+
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
 
@@ -76,7 +79,9 @@ public class SpellsOfMM
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
-
+        if (event.getTabKey() == CreativeModeTabs.COMBAT) {
+            event.accept(SMMItemRegistry.HAMMER_OF_GRAVITY);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

@@ -1,3 +1,5 @@
 {
-  "school.spells_of_mm.gravity": "Gravity School"
+  "school.spells_of_mm.gravity": "Gravity School",
+  "item.spells_of_mm.hammer_of_gravity": "Hammer of Gravity",
+  "item.spells_of_mm.hammer_of_gravity.tooltip": "A powerful hammer that manipulates gravitational forces"
 }

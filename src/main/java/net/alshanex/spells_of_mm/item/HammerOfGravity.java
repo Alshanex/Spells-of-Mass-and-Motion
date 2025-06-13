@@ -5,7 +5,7 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.component.Tool;
 
 public class HammerOfGravity extends SwordItem {
-    public HammerOfGravity(Tier p_tier, Properties p_properties, Tool toolComponentData) {
-        super(p_tier, p_properties, toolComponentData);
+    public HammerOfGravity(Tier tier, Properties properties) {
+        super(tier, properties.attributes(SwordItem.createAttributes(tier, 12, -3.4f)));
     }
 }
