@@ -3,6 +3,7 @@ package net.alshanex.spells_of_mm;
 import net.alshanex.spells_of_mm.registry.SMMAttributeRegistry;
 import net.alshanex.spells_of_mm.registry.SMMItemRegistry;
 import net.alshanex.spells_of_mm.registry.SMMSchoolRegistry;
+import net.alshanex.spells_of_mm.registry.SMMSpellRegistry;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -63,6 +64,8 @@ public class SpellsOfMM
         SMMSchoolRegistry.SCHOOLS.register(modEventBus);
 
         SMMItemRegistry.ITEMS.register(modEventBus);
+
+        SMMSpellRegistry.register(modEventBus);
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
