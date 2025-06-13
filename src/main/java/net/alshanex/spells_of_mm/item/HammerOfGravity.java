@@ -21,8 +21,9 @@ public class HammerOfGravity extends SwordItem implements IPresetSpellContainer 
         }
 
         if (!ISpellContainer.isSpellContainer(itemStack)) {
-            var spellContainer = ISpellContainer.create(1, true, false).mutableCopy();
+            var spellContainer = ISpellContainer.create(2, true, false).mutableCopy();
             spellContainer.addSpell(SMMSpellRegistry.FRONT_SMASH.get(), 5, true);
+            spellContainer.addSpell(SMMSpellRegistry.GROUND_SMASH.get(), 5, true);
             itemStack.set(ComponentRegistry.SPELL_CONTAINER, spellContainer.toImmutable());
         }
     }
