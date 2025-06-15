@@ -9,6 +9,7 @@ import io.redspace.ironsspellbooks.damage.DamageSources;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.alshanex.spells_of_mm.registry.SMMEntityRegistry;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -117,6 +118,11 @@ public class CustomBlackHole extends Projectile {
     public void tick() {
         super.tick();
         int update = Math.max((int) (getRadius() / 2), 2);
+
+        if (level().isClientSide) {
+            spawnCircularParticles();
+        }
+
         //prevent lag from giagantic black holes
         if (tickCount % update == 0) {
             updateTrackingEntities();
@@ -154,6 +160,64 @@ public class CustomBlackHole extends Projectile {
                     if (entity.distanceToSqr(center) < 9) {
                         entity.setDeltaMovement(entity.getDeltaMovement().add(entity.position().subtract(center).normalize().scale(0.5f)));
                         entity.hurtMarked = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private void spawnCircularParticles() {
+        if (getOwner() == null) return;
+
+        float radius = getRadius();
+        Vec3 center = getOwner().position(); // Centro en la posición del summoner
+
+        // Número de círculos concéntricos
+        int numRings = Math.max(3, (int)(radius / 2));
+
+        // Generar partículas cada pocos ticks para evitar lag
+        if (tickCount % 2 == 0) {
+            for (int ring = 0; ring < numRings; ring++) {
+                float ringRadius = radius * (1.0f - (float)ring / numRings);
+                int particlesPerRing = Math.max(8, (int)(ringRadius * 4));
+
+                for (int i = 0; i < particlesPerRing; i++) {
+                    // Ángulo para distribuir partículas uniformemente en el círculo
+                    double angle = (2 * Math.PI * i / particlesPerRing) + (tickCount * 0.05);
+
+                    // Posición en el círculo - horizontal en el suelo
+                    double x = center.x + Math.cos(angle) * ringRadius;
+                    double z = center.z + Math.sin(angle) * ringRadius;
+                    double y = center.y + 0.1; // Ligeramente por encima del suelo
+
+                    // Velocidad dirigida hacia el centro (summoner)
+                    Vec3 particlePos = new Vec3(x, y, z);
+                    Vec3 velocity = center.subtract(particlePos).normalize().scale(0.15 + ring * 0.02);
+
+                    // Solo movimiento horizontal hacia el centro, sin componente Y
+                    velocity = new Vec3(velocity.x, 0, velocity.z);
+
+                    // Agregar algo de variación aleatoria horizontal
+                    velocity = velocity.add(
+                            (random.nextDouble() - 0.5) * 0.02,
+                            0, // Sin variación vertical
+                            (random.nextDouble() - 0.5) * 0.02
+                    );
+
+                    // Spawear la partícula
+                    level().addParticle(
+                            ParticleTypes.PORTAL,
+                            x, y, z,
+                            velocity.x, velocity.y, velocity.z
+                    );
+
+                    // Agregar algunas partículas de ender ocasionalmente
+                    if (random.nextFloat() < 0.3f) {
+                        level().addParticle(
+                                ParticleTypes.REVERSE_PORTAL,
+                                x, y, z,
+                                velocity.x * 0.7, velocity.y, velocity.z * 0.7
+                        );
                     }
                 }
             }
