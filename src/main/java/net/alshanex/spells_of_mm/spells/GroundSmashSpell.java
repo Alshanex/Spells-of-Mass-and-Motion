@@ -17,6 +17,7 @@ import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.alshanex.spells_of_mm.SpellsOfMM;
 import net.alshanex.spells_of_mm.entity.CustomBlackHole;
+import net.alshanex.spells_of_mm.particles.TripleBlastwaveParticleOptions;
 import net.alshanex.spells_of_mm.registry.SMMItemRegistry;
 import net.alshanex.spells_of_mm.registry.SMMSchoolRegistry;
 import net.alshanex.spells_of_mm.util.SMMAnimations;
@@ -58,7 +59,7 @@ public class GroundSmashSpell extends AbstractSpell {
             .setMinRarity(SpellRarity.RARE)
             .setSchoolResource(SMMSchoolRegistry.GRAVITY_RESOURCE)
             .setMaxLevel(5)
-            .setCooldownSeconds(15)
+            .setCooldownSeconds(20)
             .build();
 
     public GroundSmashSpell() {
@@ -142,6 +143,7 @@ public class GroundSmashSpell extends AbstractSpell {
                         livingEntity.addDeltaMovement(new Vec3(0, 1, 0));
                         livingEntity.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 60,1, false, false, true));
                         livingEntity.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 120,1, false, false, true));
+                        MagicManager.spawnParticles(level, new TripleBlastwaveParticleOptions(SMMSchoolRegistry.GRAVITY.get().getTargetingColor(), 1), livingEntity.getX(), livingEntity.getY() + .33f, livingEntity.getZ(), 1, 0, 0, 0, 0, true);
                     }
                 }
             }

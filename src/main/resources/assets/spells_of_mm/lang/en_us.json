@@ -1,5 +1,13 @@
 {
   "school.spells_of_mm.gravity": "Gravity School",
   "item.spells_of_mm.hammer_of_gravity": "Hammer of Gravity",
-  "item.spells_of_mm.hammer_of_gravity.tooltip": "A powerful hammer that manipulates gravitational forces"
+  "item.spells_of_mm.hammer_of_gravity.tooltip": "A powerful hammer that manipulates gravitational forces",
+
+  "spell.spells_of_mm.gravity_shift": "Antigravity Pulse",
+  "spell.spells_of_mm.front_smash": "Repulsing Smash",
+  "spell.spells_of_mm.ground_smash": "Gravitational Slam",
+
+  "spell.spells_of_mm.gravity_shift.guide": "When targeting an entity, hurts it and reduces its gravity for some time. When not targeting, reduces the gravity of the user for some time.",
+  "spell.spells_of_mm.front_smash.guide": "Throws a heavy smash imbued in the gravitational magic of the hammer to damage and throw away the enemies at the front.",
+  "spell.spells_of_mm.ground_smash.guide": "Conduits the power of gravity attracting nearby entities and then smashes the ground, damaging them and stealing their gravity for some time."
 }

@@ -59,15 +59,15 @@ public class FrontSmashSpell extends AbstractSpell {
             .setMinRarity(SpellRarity.RARE)
             .setSchoolResource(SMMSchoolRegistry.GRAVITY_RESOURCE)
             .setMaxLevel(5)
-            .setCooldownSeconds(15)
+            .setCooldownSeconds(10)
             .build();
 
     public FrontSmashSpell() {
-        this.manaCostPerLevel = 15;
+        this.manaCostPerLevel = 10;
         this.baseSpellPower = 8;
         this.spellPowerPerLevel = 3;
         this.castTime = 20;
-        this.baseManaCost = 30;
+        this.baseManaCost = 20;
     }
 
     @Override

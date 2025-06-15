@@ -1,6 +1,7 @@
 package net.alshanex.spells_of_mm.setup;
 
 import net.alshanex.spells_of_mm.SpellsOfMM;
+import net.alshanex.spells_of_mm.particles.TripleBlastwaveParticle;
 import net.alshanex.spells_of_mm.particles.VibrationParticle;
 import net.alshanex.spells_of_mm.registry.SMMEntityRegistry;
 import net.alshanex.spells_of_mm.registry.SMMParticleRegistry;
@@ -21,5 +22,6 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(SMMParticleRegistry.VIBRATION_PARTICLE.get(), VibrationParticle.Provider::new);
+        event.registerSpriteSet(SMMParticleRegistry.TRIPLE_BLASTWAVE_PARTICLE.get(), TripleBlastwaveParticle.Provider::new);
     }
 }
