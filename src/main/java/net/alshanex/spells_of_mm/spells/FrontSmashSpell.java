@@ -16,14 +16,17 @@ import io.redspace.ironsspellbooks.util.ParticleHelper;
 import net.alshanex.spells_of_mm.SpellsOfMM;
 import net.alshanex.spells_of_mm.item.HammerOfGravity;
 import net.alshanex.spells_of_mm.registry.SMMItemRegistry;
+import net.alshanex.spells_of_mm.registry.SMMParticleRegistry;
 import net.alshanex.spells_of_mm.registry.SMMSchoolRegistry;
 import net.alshanex.spells_of_mm.util.SMMAnimations;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -35,6 +38,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
@@ -116,14 +120,14 @@ public class FrontSmashSpell extends AbstractSpell {
         float range = 1.7f;
         Vec3 smiteLocation = Utils.raycastForBlock(level, entity.getEyePosition(), entity.getEyePosition().add(entity.getForward().multiply(range, 0, range)), ClipContext.Fluid.NONE).getLocation();
         Vec3 particleLocation = level.clip(new ClipContext(smiteLocation, smiteLocation.add(0, -2, 0), ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, CollisionContext.empty())).getLocation().add(0, 0.1, 0);
-        MagicManager.spawnParticles(level, new BlastwaveParticleOptions(SMMSchoolRegistry.GRAVITY.get().getTargetingColor(), radius * 2),
-                particleLocation.x, particleLocation.y, particleLocation.z, 1, 0, 0, 0, 0, true);
-        MagicManager.spawnParticles(level, ParticleHelper.UNSTABLE_ENDER, particleLocation.x, particleLocation.y, particleLocation.z, 50, 0, 0, 0, 1, false);
-        CameraShakeManager.addCameraShake(new CameraShakeData(10, particleLocation, 10));
-        var entities = level.getEntities(entity, AABB.ofSize(smiteLocation, radius * 2, radius * 4, radius * 2));
+
+        Vec3 start = entity.getEyePosition();
+        Vec3 end = start.add(entity.getForward().scale(range));
+        AABB boundingBox = entity.getBoundingBox().expandTowards(end.subtract(start));
+
+        List<? extends Entity> entities = level.getEntities(entity, boundingBox);
         var damageSource = this.getDamageSource(entity);
         for (Entity targetEntity : entities) {
-            //double distance = targetEntity.distanceToSqr(smiteLocation);
             if (targetEntity.isAlive() && targetEntity.isPickable() && Utils.hasLineOfSight(level, smiteLocation.add(0, 1, 0), targetEntity.getBoundingBox().getCenter(), true)) {
                 if (DamageSources.applyDamage(targetEntity, getDamage(spellLevel, entity), damageSource)) {
                     EnchantmentHelper.doPostAttackEffects((ServerLevel) level, targetEntity, damageSource);
@@ -135,6 +139,15 @@ public class FrontSmashSpell extends AbstractSpell {
                 }
             }
         }
+
+        Vec3 vec3 = entity.getLookAngle().normalize();
+        for (int i = 0; i < range; i++) {
+            var vec32 = vec3.scale(i).add(entity.getEyePosition());
+            MagicManager.spawnParticles(level, SMMParticleRegistry.VIBRATION_PARTICLE.get(), vec32.x, vec32.y, vec32.z, 1, 0, 0, 0, 0, false);
+        }
+
+        MagicManager.spawnParticles(level, ParticleHelper.UNSTABLE_ENDER, particleLocation.x, particleLocation.y, particleLocation.z, 50, 0, 0, 0, 1, false);
+        CameraShakeManager.addCameraShake(new CameraShakeData(10, particleLocation, 10));
         super.onCast(level, spellLevel, entity, castSource, playerMagicData);
     }
 
