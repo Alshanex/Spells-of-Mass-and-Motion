@@ -20,7 +20,9 @@ public class VibrationParticle extends TextureSheetParticle {
         this.zd = zd;
         this.quadSize *= 2f;
         this.scale(2f);
-        this.lifetime = 15 + (int) (Math.random() * 10);
+
+        this.lifetime = 5 + (int) (Math.random() * 5);
+
         sprites = spriteSet;
         this.gravity = 0F;
         this.setSpriteFromAge(spriteSet);
@@ -33,15 +35,24 @@ public class VibrationParticle extends TextureSheetParticle {
     @Override
     public void tick() {
         super.tick();
+
         this.setSpriteFromAge(this.sprites);
 
         float lifeProgress = (float) this.age / (float) this.lifetime;
-        this.quadSize = 1f + lifeProgress * 5f;
+
+        // Cambio de tamaño más pronunciado y rápido
+        this.quadSize = 1f + lifeProgress * 3f; // Reducido de 5f a 3f para menos crecimiento
+
+        // Opcional: Fade out más rápido hacia el final
+        if (lifeProgress > 0.7f) {
+            float fadeProgress = (lifeProgress - 0.7f) / 0.3f;
+            this.alpha = 1.0f - fadeProgress;
+        }
     }
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT; // Cambiado para soportar transparencia
     }
 
     @OnlyIn(Dist.CLIENT)
